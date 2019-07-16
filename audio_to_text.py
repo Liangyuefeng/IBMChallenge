@@ -13,8 +13,8 @@ def main():
 
 def stt(audio_name, text_name="text.txt", audio_path="./audio/", text_path="./text/"):
     speech_to_text = SpeechToTextV1(
-        iam_apikey='GbMDTvaUm4mwVHY9hOnY9ixYiyB24bOBVIMrGFcHxjTL',
-        url='https://gateway-lon.watsonplatform.net/speech-to-text/api'
+        iam_apikey=xxxxxxxxxxxxxxxx,
+        url=xxxxxxxxxxxxxxx
     )
 
     # recognize audio
