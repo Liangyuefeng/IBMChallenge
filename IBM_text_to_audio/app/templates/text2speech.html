@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<title>Speech2Text</title>
+<!-- 引入 jQuery 库 -->
+<script src="{{ url_for('static', filename='js/jquery-1.9.0.min.js') }}"></script>
+<script>
+	function sendTextData(){
+		//获取页面上id 为text元素的值
+		var text=$("#text").val();
+		//调用Server端的Python
+		var url= "/dotext2speech";
+		//使用ajax发送数据给Server端的Python,并将返回的相对路径data赋给id为audio标签的src字段。
+		$.ajax({
+				url: url,
+				data: "message=" + text + "",
+				type: "GET",
+				cache: false,
+				dataType:'text',
+				error: function(){
+					console.log("Some errors happened.");
+				},
+				success: function(data){
+					$("#audio").attr("src",data);
+				}
+			});
+
+	}
+</script>
+<body>
+<div>
+	<!-- <form action="doLogin" method = "post"> -->
+	<input type="text" name="text" id="text" size="70" />
+	<input type="button" onclick="sendTextData()" name="texttospeech" value="Text to Speech" /> <br/><br/>
+	<audio name="audio" id="audio" controls autoplay>当浏览器不支持audio标签</audio>
+	<!-- </form> -->
+</div>
+</body>
+</html>
