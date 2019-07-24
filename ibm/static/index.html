@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<meta name="application-name" content="IBM Challenge 5" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="IBM Challenge 5" />
+		<script src="lib/jquery.min.js"></script>
+		<script src="lib/jquery.easyui.min.js"></script>
+		<script src="lib/jquery.easyui.mobile.js"></script>
+		<script src="lib/locale/easyui-lang-zh_CN.js"></script>
+		<script src="lib/recorder.mp3.min.js"></script>
+		<script>
+		var recorder = Recorder();
+		var reader = new FileReader();
+		reader.onloadend = function() {
+			$.messager.progress({
+				title: "Loading",
+				msg: "Please wait...",
+				text: "Loading..."
+			});
+			$.post("dynamic/stt", {
+				blobB64: reader.result
+			}, function(data) {
+				stt = data.text.toLowerCase().trim();
+				process();
+			}, "json");
+		}
+		
+		var tick = -1;
+		var stt = "";
+		
+		var story = {
+			header: {
+				title: {
+					cat: "voiceover",
+					type: "text",
+					text: "Test Story 100"
+				},
+				author: {
+					cat: "voiceover",
+					type: "text",
+					text: "Bunch of Motherfuckers"
+				},
+				variables: [
+					{
+						max: 100,
+						min: 0,
+						value: 50
+					}, {
+						max: 100,
+						min: 0,
+						value: 50
+					}
+				]
+			},
+			body: [
+				{
+					cat: "voiceover",
+					type: "text",
+					text: "do you want to stat the game? please select now, say yes to go ahead, say no to fuck off"
+				}, {
+					cat: "selection",
+					decisions: [
+						{
+							voice: "yes",
+							impact: [50, -50]
+						}, {
+							voice: "no",
+							impact: [-50, 50]
+						}
+					]
+				}
+			],
+			endings: [
+				{
+					top: {
+						cat: "voiceover",
+						type: "text",
+						text: "very good"
+					},
+					mid: {
+						cat: "voiceover",
+						type: "text",
+						text: "middle good"
+					},
+					low: {
+						cat: "voiceover",
+						type: "text",
+						text: "no good"
+					}
+				},
+				{
+					top: {
+						cat: "voiceover",
+						type: "text",
+						text: "very bad"
+					},
+					mid: {
+						cat: "voiceover",
+						type: "text",
+						text: "middle bad"
+					},
+					low: {
+						cat: "voiceover",
+						type: "text",
+						text: "no bad"
+					}
+				}
+			]
+		}
+		
+		function process() {
+			if(tick == -1) {
+				tts(story.header.title.text + ", author: " + story.header.author.text);
+			} else if(tick > story.body.length + story.header.variables.length - 1) {
+
+			} else if(tick > story.body.length - 1) {
+				var i = tick - story.body.length;
+				var v = story.header.variables[i];
+				var 1third = (story.header.variables[i].max + story.header.variables[i].min) / 3;
+				var 2third = 1third * 2;
+				if(story.header.variables[i].value < 1third) {
+					tts(v.low.text);
+				} else if(story.header.variables[i].value < 2third) {
+					tts(v.mid.text);
+				} else {
+					tts(v.top.text);
+				}
+			} else {
+				switch(story.body[tick].cat) {
+					case "voiceover":
+						tts(story.body[tick].text);
+						break;
+					case "selection":
+						if(stt != "") {
+							$.each(story.body[tick].decisions, function(i, v) {
+								if(v.voice == stt) {
+									$.each(v.impact, function(j, w) {
+										story.header.variables[j] += w;
+									});
+								}
+							});
+							tick++;
+							stt = "";
+							process();
+						}
+						break;
+				}
+			}
+		}
+		function tts(text) {
+			$.messager.progress({
+				title: "Loading",
+				msg: "Please wait...",
+				text: "Loading..."
+			});
+			$.post("dynamic/tts", {
+				text: text,
+				lang: $("#languageBox").combobox("getValue")
+			}, function(data) {
+				$.messager.progress("close");
+				$("#mainPlayer").attr("src", data.blobB64);
+				$("#mainPlayer")[0].play();
+			}, "json");
+		}
+		
+		function startRecording() {
+			var flag = 0;
+			recorder.open(function() {
+				recorder.start();
+				flag = 1;
+			}, function(msg, isUserNotAllow) {
+				$.messager.alert("Recording Failed", "Recording Failed. " + (isUserNotAllow ? "User permision denied. " : msg), "error");
+			});
+			return flag;
+		}
+		
+		function stopRecording() {
+			var flag = 0;
+			recorder.stop(function(blob, duration) {
+				recorder.close();
+				reader.readAsDataURL(blob);
+				flag = 1;
+			}, function(msg) {
+				$.messager.alert("Recording Failed", "Recording Failed. " + msg, "error");
+			});
+			return flag;
+		}
+		
+		function ttsButtonOnClick() {
+			tts($("#ttsText").textbox("getValue"));
+		}
+		
+		</script>
+		<link rel="stylesheet" href="lib/themes/icon.css" />
+		<link rel="stylesheet" href="lib/themes/mobile.css" />
+		<link rel="stylesheet" href="lib/themes/material-teal/easyui.css" />
+		<title>IBM Challenge 5</title>
+	</head>
+	<body>
+		<audio style="display: none" id="mainPlayer" controls></audio>
+		Language: <input id="languageBox" style="width: 800px;"/><br />
+		Text to Speech: <input id="ttsText" style="width: 800px;" /> <a class="easyui-linkbutton" data-options="iconCls: 'icon-search', onClick: ttsButtonOnClick">Read</a><br />
+		Model: <input id="modelBox" style="width: 800px;"/><br />
+		Speech to Text: <a id="sttSwitch" style="width: 200px;">Read</a>
+		<script>
+		$("#ttsText").textbox({
+			iconCls: 'icon-search'
+		});
+		$("#languageBox").combobox({
+			iconCls: 'icon-search',
+			url: "dynamic/langlist",
+			value: "en-GB_KateVoice",
+			editable: false
+		});
+		$("#modelBox").combobox({
+			iconCls: 'icon-search',
+			url: "dynamic/modellist",
+			value: "en-GB_NarrowbandModel",
+			editable: false
+		});
+		$("#sttSwitch").switchbutton({
+			onText: 'Recording...',
+			offText: 'Idle',
+			onChange: function(checked) {
+				if(checked) {
+					startRecording();
+					/* if(!startRecording()) {
+						$("#sttSwitch").switchbutton("uncheck");
+					} */
+				} else {
+					if(!stopRecording()) {
+						$("#sttSwitch").switchbutton("check");
+					}
+				}
+			}
+		});
+		$("#mainPlayer").bind('ended', function(){
+			tick++;
+			process();
+		});
+		
+		process();
+		</script>
+	</body>
+</html>
