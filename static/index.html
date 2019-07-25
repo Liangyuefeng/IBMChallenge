@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<meta name="application-name" content="IBM Challenge 5" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="IBM Challenge 5" />
+		<script src="lib/jquery.min.js"></script>
+		<script src="lib/jquery.easyui.min.js"></script>
+		<script src="lib/jquery.easyui.mobile.js"></script>
+		<script src="lib/locale/easyui-lang-zh_CN.js"></script>
+		<script src="lib/recorder.mp3.min.js"></script>
+		<script>
+		var recorder = Recorder();
+		var blobBuilder = new FileReader();
+		blobBuilder.onloadend = function() {
+			$.messager.progress({
+				title: "Loading",
+				msg: "Please wait...",
+				text: "Loading..."
+			});
+			$.post("dynamic/stt", {
+				blobB64: blobBuilder.result
+			}, function(data) {
+				stt = data.text.toLowerCase().trim();
+				process();
+			}, "json");
+		}
+		var fileReader = new FileReader();
+		fileReader.onloadend = function() {
+			var decoded = JSON.parse(fileReader.result);
+			if(decoded.header.title.text != null) {
+				story = decoded;
+				$("#fileInfo").html("Story: " + story.header.title.text + " is loaded.");
+			} else {
+				$.messager.alert("Loading Failed", "Loading failed. Please choose a valid story file.", "error", function() {
+					$("#file").filebox("clear");
+				});
+			}
+		}
+		
+		var tick = -1;
+		var stt = "";
+		
+		var story = {};
+		
+		function process() {
+			if(tick < -1) {
+				return;
+			} else if(tick > story.body.length + story.endings.length) {
+				$("#startSwitch").switchbutton("uncheck");
+				return;
+			} else if (tick == -1){
+				tts(story.header.title.text + ", author: " + story.header.author.text);
+			} else if(tick == story.body.length) {
+				tts("The story is finished. Endings are going below.");
+			} else if(tick > story.body.length) {
+				var i = tick - story.body.length - 1;
+				if(i < story.endings.length) {
+					var v = story.endings[i];
+					var third1 = (story.header.variables[i].max + story.header.variables[i].min) / 3;
+					var third2 = third1 * 2;
+					if(story.header.variables[i].value < third1) {
+						tts(v.low.text);
+					} else if(story.header.variables[i].value < third2) {
+						tts(v.mid.text);
+					} else {
+						tts(v.top.text);
+					}
+				}
+			} else {
+				switch(story.body[tick].cat) {
+					case "voiceover":
+						tts(story.body[tick].text);
+						break;
+					case "selection":
+						if(stt != "") {
+							var matches = 0;
+							$.each(story.body[tick].decisions, function(i, v) {
+								if(v.voice == stt && matches == 0) {
+									$.each(v.impact, function(j, w) {
+										story.header.variables[j].value += w;
+									});
+									story.body[tick].chosen = i;
+									matches++;
+								}
+							});
+							if(matches == 0) {
+								stt = "";
+								tick--;
+								tts("Voice didn't recognised. Please try again.");
+							} else {
+								stt = "";
+								tick++;
+								process();
+							}
+						} else {
+							$("#sttSwitch").switchbutton("enable");
+							$("#sttSwitch").switchbutton("check");
+						}
+						break;
+					case "reacts":
+						var chosen = story.body[story.body[tick].respected].chosen;
+						tts(story.body[tick].reacts[chosen].text);
+						break;
+				}
+			}
+		}
+		
+		function tts(text) {
+			$.messager.progress({
+				title: "Loading",
+				msg: "Please wait...",
+				text: "Loading..."
+			});
+			$.post("dynamic/tts", {
+				text: text,
+				lang: $("#languageBox").combobox("getValue")
+			}, function(data) {
+				$.messager.progress("close");
+				$("#mainPlayer").attr("src", data.blobB64);
+				$("#mainPlayer")[0].play();
+			}, "json");
+		}
+		
+		function startRecording() {
+			recorder.open(function() {
+				recorder.start();
+			}, function(msg, isUserNotAllow) {
+				$.messager.alert("Recording Failed", "Recording failed. " + (isUserNotAllow ? "User permision denied. " : msg), "error", function() {
+					$("#sttSwitch").switchbutton("uncheck");
+				});
+			});
+		}
+		
+		function stopRecording() {
+			recorder.stop(function(blob, duration) {
+				recorder.close();
+				blobBuilder.readAsDataURL(blob);
+			}, function(msg) {
+				$.messager.alert("Recording Failed", "Recording failed. " + msg, "error", function() {
+					$("#sttSwitch").switchbutton("uncheck");
+				});
+			});
+		}
+		</script>
+		<link rel="stylesheet" href="lib/themes/icon.css" />
+		<link rel="stylesheet" href="lib/themes/mobile.css" />
+		<link rel="stylesheet" href="lib/themes/material-teal/easyui.css" />
+		<title>IBM Challenge 5</title>
+	</head>
+	<body>
+		<audio style="display: none" id="mainPlayer"></audio>
+		<h1>IBM Challenge 5</h1>
+		<h3>By the Magnificent Six</h3>
+		Load your story configuration: <input id="file" style="width: 300px;" /> <span id="fileInfo" style="color: #FF0000"></span><br />
+		<br />
+		Text to Speech Configuration:<br />
+		Language: <input id="languageBox" style="width: 800px;"/><br />
+		<br />
+		Speech to Text Configuration:<br />
+		Recognition Model: <input id="modelBox" style="width: 800px;"/> <a id="sttSwitch" style="width: 200px;"></a><br />
+		<br />
+		<a id="startSwitch" style="width: 200px;"></a> Press <span style="font-weight: bold;">Space</span> to end recording when you finished speaking.
+		<script>
+		$("#languageBox").combobox({
+			iconCls: 'icon-man',
+			url: "dynamic/langlist",
+			value: "en-GB_KateVoice",
+			editable: false
+		});
+		$("#modelBox").combobox({
+			iconCls: 'icon-tip',
+			url: "dynamic/modellist",
+			value: "en-GB_NarrowbandModel",
+			editable: false
+		});
+		$("#file").filebox({
+			buttonText: 'Choose File',
+			buttonAlign: 'right',
+			buttonIcon: 'icon-file',
+			accept: 'application/json',
+			prompt: 'Click to select your file',
+			onChange: function(newValue, oldValue){
+				var file = $("#file").filebox("files");
+				if(file.length == 1 && file[0].type == "application/json") {
+					fileReader.readAsText(file[0]);
+				} else {
+					$.messager.alert("Loading Failed", "Loading failed. Please choose a JSON file.", "error", function() {
+						$("#file").filebox("clear");
+					});
+				}
+			}
+		});
+		$("#sttSwitch").switchbutton({
+			onText: 'Recording...',
+			offText: 'Idle',
+			disabled: true,
+			onChange: function(checked) {
+				if(checked) {
+					startRecording();
+				} else {
+					$("#sttSwitch").switchbutton("disable");
+					stopRecording();
+				}
+			}
+		});
+		$("#startSwitch").switchbutton({
+			onText: 'Running...',
+			offText: 'Press to Start',
+			onChange: function(checked) {
+				if(checked) {
+					if($.isEmptyObject(story)) {
+						$.messager.alert("Starting Failed", "Stating failed. No story is loaded.", "error", function() {
+							$("#startSwitch").switchbutton("uncheck");
+						});
+					} else {
+						tick = -1;
+						$.each(story.header.variables, function(i, v) {
+							story.header.variables[i].value = (v.min + v.max) / 2
+						});
+						process();
+					}
+				} else {
+					tick = -3;
+				}
+			}
+		});
+		$(document).keypress(function(event) {
+			if(event.which == 32) {
+				if($("#sttSwitch").switchbutton("options").checked == true) {
+					$("#sttSwitch").switchbutton("uncheck");
+				}
+			}
+		});
+		$("#mainPlayer").bind('ended', function(){
+			tick++;
+			process();
+		});
+		</script>
+	</body>
+</html>

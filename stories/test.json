@@ -1,0 +1,84 @@
+{
+	"header": {
+		"title": {
+			"cat": "voiceover",
+			"text": "Test Story 100"
+		},
+		"author": {
+			"cat": "voiceover",
+			"text": "Bunch of stupid nerds"
+		},
+		"variables": [
+			{
+				"max": 100,
+				"min": 0,
+				"value": 50
+			}, {
+				"max": 100,
+				"min": 0,
+				"value": 50
+			}
+		]
+	},
+	"body": [
+		{
+			"cat": "voiceover",
+			"text": "do you want to stat the game? please select now, say yes to go ahead, say no to go away"
+		}, {
+			"cat": "selection",
+			"decisions": [
+				{
+					"voice": "yes",
+					"impact": [50, -50]
+				}, {
+					"voice": "no",
+					"impact": [-50, 50]
+				}
+			],
+			"chosen": -1
+		}, {
+			"cat": "reacts",
+			"respected": 1,
+			"reacts": [
+				{
+					"cat": "voiceover",
+					"text": "you said yes"
+				}, 
+				{
+					"cat": "voiceover",
+					"text": "you said no"
+				}
+			]
+		}
+	],
+	"endings": [
+		{
+			"top": {
+				"cat": "voiceover",
+				"text": "very good"
+			},
+			"mid": {
+				"cat": "voiceover",
+				"text": "middle good"
+			},
+			"low": {
+				"cat": "voiceover",
+				"text": "no good"
+			}
+		},
+		{
+			"top": {
+				"cat": "voiceover",
+				"text": "very bad"
+			},
+			"mid": {
+				"cat": "voiceover",
+				"text": "middle bad"
+			},
+			"low": {
+				"cat": "voiceover",
+				"text": "no bad"
+			}
+		}
+	]
+}
