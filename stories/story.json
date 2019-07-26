@@ -1,0 +1,132 @@
+{
+	"header": {
+		"title": {
+			"cat": "voiceover",
+			"text": "Magical Traveller"
+		},
+		"author": {
+			"cat": "voiceover",
+			"text": "Miguel Li"
+		},
+		"variables": [
+			{
+				"max": 15,
+				"min": 1,
+				"value": 0,
+				"default": 0
+			}
+		]
+	},
+	"body": [
+		{
+			"cat": "voiceover",
+			"text": "You woke up in a dark room, you tried to reach for something but there is nothing. Suddenly, you hear a voice: Welcome traveler, I am glad you are okay. Who are you? you replied. I am your judge, you have been brought here in the light of the recent events. Which events? you replied. You will soon remember, but first go forth into one of the following doors. Suddenly, three doors raised from the ground and where illuminated by a flashing light. The one on the left was black and if it weren't for the light it would have blended with the room. The one in the middle was grey and the last one was white. Which one would you like to open? Option 1: black door, Option 2: Grey door, Option 3: White door."
+		}, {
+			"cat": "selection",
+			"decisions": [
+				{
+					"voice": "option one",
+					"impact": [1]
+				}, {
+					"voice": "option two",
+					"impact": [3]
+				}, {
+					"voice": "option three",
+					"impact": [2]
+				}
+			],
+			"chosen": -1
+		}, {
+			"cat": "voiceover",
+			"text": "Very well then go forth, the voice said. When you opened the door, a blinding light flashed in front of you, and you appeared in front of a garden with a tree at your left side, a table with chairs, tea and biscuits, at the middle and a gravestone on the right. You then feel something grabbing your hand, when you turn to see what it is, you see an old lady that proceeds to tell you: Where shall we go? Please guide me to a place I can rest. You decided to take her to: Option 1: The tree, Option 2: The table, Option 3: The gravestone"
+		}, {
+			"cat": "selection",
+			"decisions": [
+				{
+					"voice": "option one",
+					"impact": [3]
+				}, {
+					"voice": "option two",
+					"impact": [1]
+				}, {
+					"voice": "option three",
+					"impact": [2]
+				}
+			],
+			"chosen": -1
+		}, {
+			"cat": "voiceover",
+			"text": "When you arrived she sat and thanked you for helping her, with a smile, she then disappeared. Looking where the old lady once was, the scenery began to change. The bright colors of the garden begin to converge until you found yourself in a forest. However the trees were dark and the leaves darker. Three birds then appeared and each of them was positioned in front of a different road. The one in the left road had a peacock, showing its feathers pridefully. The one in the middle had a crow resting on top of a tree branch, looking at you with its onyx dark eyes. Finally, the last road had and owl singing, while moving its head. Follow the bird you trust, as it will guide you to your destination, said a voice. Looking at the options, you choose to go with: Option 1: Peacock, Option 2: Crow, Option 3: Owl"
+		}, {
+			"cat": "selection",
+			"decisions": [
+				{
+					"voice": "option one",
+					"impact": [2]
+				}, {
+					"voice": "option two",
+					"impact": [1]
+				}, {
+					"voice": "option three",
+					"impact": [3]
+				}
+			],
+			"chosen": -1
+		}, {
+			"cat": "voiceover",
+			"text": "When you approached the bird, it swiftly turned around and begin heading further ahead the path before you. As you followed the bird, a mist covered the path and your vision, getting thicker as you moved forward. After walking for a couple of minutes you arrived to a river, however this river had something in particular, three bridges were connected to the other side of the river. The first one looked old but sturdy, being worn out from the countless travelers that had passed through it. The second one looked pristine, as if no one has ever laid a foot on it. While the third one looked simple, nor new or old, but just common. Through which bridge will you cross the river? Option 1: The old one, Option 2: The pristine one, Option 3: The common one."
+		}, {
+			"cat": "selection",
+			"decisions": [
+				{
+					"voice": "option one",
+					"impact": [1]
+				}, {
+					"voice": "option two",
+					"impact": [3]
+				}, {
+					"voice": "option three",
+					"impact": [2]
+				}
+			],
+			"chosen": -1
+		}, {
+			"cat": "voiceover",
+			"text": "You stepped forward and began walking towards the other side, the bridge was sturdy and you felt at ease. However, the bridge suddenly collapsed, making you fall into the river´s current, dragging you violently along itself. You woke up coughing, and realized you passed out while being dragged by the current. As you were standing up you and your vision was adjusting to the light of your environment, you found touching a hard wall. Further inspecting your environment, you realized that you were standing in a corridor of what seems to be a medieval castle. Armors adorned the hallways, there were paintings of people that, even though you didn't recognize, looked wealthy and part of the nobility. When you arrived at the end of the corridor, you saw a large wooden door, deciding to see what was behind it, you opened the door. You soon discover that you had arrived to an armory where many rare and intrincated weapons were stored. Nevertheless, three weapons standed out from the others: a sword, a shield and a bow. They were placed on pedestals and all had a white color embroidered with golden details. In front of them a plaque wrote: “Choose thy weapon oh great hero, but only one as wielding two will be a sin”. Which one do you pick? Option 1: Sword, Option 2: Shield, Option 3: Bow."
+		}, {
+			"cat": "selection",
+			"decisions": [
+				{
+					"voice": "option one",
+					"impact": [2]
+				}, {
+					"voice": "option two",
+					"impact": [3]
+				}, {
+					"voice": "option three",
+					"impact": [1]
+				}
+			],
+			"chosen": -1
+		}, {
+			"cat": "voiceover",
+			"text": "Approaching the pedestal of the weapon, you grabbed the weapon with both hands, inspecting its fine details and how light it felt. The weapon began glowing with an intense light and suddenly,  disintegrated into a single light that then floated through you. This made you feel dizzy and soon, you collapsed again. Waking up again in the black room, the voice, once again spoke to you in his commanding voice: Your journey is almost at an end, all the decisions you have taken so far, have allowed me to judge who you are. Each scenario has told me who you were and that will determine the outcome of your life."
+		}
+	],
+	"endings": [
+		{
+			"top": {
+				"cat": "voiceover",
+				"text": "You have proven yourself worthy, voice said. You are a kind soul, who no longer has the need to return to your former world, as you have transcended it. Now come forth, as a new world awaits you. As soon as the voice finished speaking, lights started to emerge from the ground. As they ascended they began to move in a spiral motion around you, forming a tube that appeared to be infinite. Then everything stopped and you begin to fall into the dark. When you woke up, you saw the most beautiful landscape you have ever witness. We doubt hesitation you walked forward, only thinking about paradise."
+			},
+			"mid": {
+				"cat": "voiceover",
+				"text": "Your soul has proven to be strong, not pure, but strong enough to allow you to withstand the process to return, said the voice. After he finished that sentence, lights started to emerge from the ground. The light started to fill the room and, as more lights came out, the more difficult it was to see. The blinding light made you closed your eyes. When you opened your eyes again, the scenery had completely change. You were facing a ceiling and machines were at your side, displaying numbers and graphs you didn´t understand. You are finally awake, a voice said with a tone of sadness and disbelief. After the accident we didn´t know when will you open your eyes again, I am so glad. Then memories started flowing through your head, remembering how you were hit by a car while passing through the road."
+			},
+			"low": {
+				"cat": "voiceover",
+				"text": "You are not worthy to go back from where you came, your only option is to go again into the cycle of rebirth and hope to change. The judge said in a commanding voice. Following his words you felt the desperate need to sleep, the feeling of tiredness was overwhelming and you soon begin to close your eyes. As you fell asleep memories from your previous life starting coming back to you and then everything was black again."
+			}
+		}
+	]
+}

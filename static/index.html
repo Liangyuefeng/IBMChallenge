@@ -219,7 +219,7 @@
 					} else {
 						tick = -1;
 						$.each(story.header.variables, function(i, v) {
-							story.header.variables[i].value = (v.min + v.max) / 2
+							story.header.variables[i].value = v.default;
 						});
 						process();
 					}
