@@ -35,7 +35,10 @@ def dynamic(command):
         uri = DataURI(postData["blobB64"])
         service = SpeechToTextV1(url='https://gateway-lon.watsonplatform.net/speech-to-text/api', iam_apikey='H8hCy1Zih1Ffy8TWuBOQQ0YE5Nbo2yNBh-IXJsq2-1uk')
         response = service.recognize(audio=uri.data, content_type=uri.mimetype, word_alternatives_threshold=0.9, keywords=['yes', 'no', 'option', 'one', 'two', 'three', 'four'], keywords_threshold=0.9).get_result()
-        return jsonify({"text": response['results'][0]["alternatives"][0]["transcript"]})
+        if len(response['results']) > 0:
+            return jsonify({"text": response['results'][0]["alternatives"][0]["transcript"]})
+        else:
+            return  jsonify({"text": "nothing"})
 
 @web.route("/<path:path>")
 def staticFiles(path):

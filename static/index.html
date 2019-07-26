@@ -14,6 +14,14 @@
 		<script src="lib/recorder.mp3.min.js"></script>
 		<script>
 		var recorder = Recorder();
+		recorder.open(function() {
+			$("#recordInfo").html("Recording permission granted.");
+		}, function(msg, isUserNotAllow) {
+			$.messager.alert("Initialising Failed", "Initialising failed. " + (isUserNotAllow ? "User permission denied. " : msg), "error", function() {
+				window.location.reload();
+			});
+		});
+		
 		var blobBuilder = new FileReader();
 		blobBuilder.onloadend = function() {
 			$.messager.progress({
@@ -24,10 +32,12 @@
 			$.post("dynamic/stt", {
 				blobB64: blobBuilder.result
 			}, function(data) {
+				$.messager.progress("close");
 				stt = data.text.toLowerCase().trim();
 				process();
 			}, "json");
 		}
+		
 		var fileReader = new FileReader();
 		fileReader.onloadend = function() {
 			var decoded = JSON.parse(fileReader.result);
@@ -124,27 +134,6 @@
 				$("#mainPlayer")[0].play();
 			}, "json");
 		}
-		
-		function startRecording() {
-			recorder.open(function() {
-				recorder.start();
-			}, function(msg, isUserNotAllow) {
-				$.messager.alert("Recording Failed", "Recording failed. " + (isUserNotAllow ? "User permision denied. " : msg), "error", function() {
-					$("#sttSwitch").switchbutton("uncheck");
-				});
-			});
-		}
-		
-		function stopRecording() {
-			recorder.stop(function(blob, duration) {
-				recorder.close();
-				blobBuilder.readAsDataURL(blob);
-			}, function(msg) {
-				$.messager.alert("Recording Failed", "Recording failed. " + msg, "error", function() {
-					$("#sttSwitch").switchbutton("uncheck");
-				});
-			});
-		}
 		</script>
 		<link rel="stylesheet" href="lib/themes/icon.css" />
 		<link rel="stylesheet" href="lib/themes/mobile.css" />
@@ -155,13 +144,13 @@
 		<audio style="display: none" id="mainPlayer"></audio>
 		<h1>IBM Challenge 5</h1>
 		<h3>By the Magnificent Six</h3>
-		Load your story configuration: <input id="file" style="width: 300px;" /> <span id="fileInfo" style="color: #FF0000"></span><br />
+		<span style="font-weight: bold;">Load your story configuration:</span> <input id="file" style="width: 300px;" /> <span id="fileInfo" style="color: #00AA00"></span><br />
 		<br />
-		Text to Speech Configuration:<br />
+		<span style="font-weight: bold;">Text to Speech Configuration:</span><br />
 		Language: <input id="languageBox" style="width: 800px;"/><br />
 		<br />
-		Speech to Text Configuration:<br />
-		Recognition Model: <input id="modelBox" style="width: 800px;"/> <a id="sttSwitch" style="width: 200px;"></a><br />
+		<span style="font-weight: bold;">Speech to Text Configuration:</span><br />
+		Recognition Model: <input id="modelBox" style="width: 800px;"/><br /><a id="sttSwitch" style="width: 200px;"></a> <span id="recordInfo" style="color: #00AA00"></span><br />
 		<br />
 		<a id="startSwitch" style="width: 200px;"></a> Press <span style="font-weight: bold;">Space</span> to end recording when you finished speaking.
 		<script>
@@ -200,10 +189,14 @@
 			disabled: true,
 			onChange: function(checked) {
 				if(checked) {
-					startRecording();
+					recorder.start();
 				} else {
 					$("#sttSwitch").switchbutton("disable");
-					stopRecording();
+					recorder.stop(function(blob, duration) {
+						blobBuilder.readAsDataURL(blob);
+					}, function(msg) {
+						$.messager.alert("Stopping Failed", "Stopping failed. " + msg, "error");
+					});
 				}
 			}
 		});
@@ -212,7 +205,11 @@
 			offText: 'Press to Start',
 			onChange: function(checked) {
 				if(checked) {
-					if($.isEmptyObject(story)) {
+					if($("#recordInfo").html() == "") {
+						$.messager.alert("Starting Failed", "Stating failed. Recording permission not granted.", "error", function() {
+							$("#startSwitch").switchbutton("uncheck");
+						});
+					} else if($.isEmptyObject(story)) {
 						$.messager.alert("Starting Failed", "Stating failed. No story is loaded.", "error", function() {
 							$("#startSwitch").switchbutton("uncheck");
 						});
@@ -225,6 +222,9 @@
 					}
 				} else {
 					tick = -3;
+					stt = "";
+					$("#sttSwitch").switchbutton("uncheck");
+					$("#mainPlayer")[0].pause();
 				}
 			}
 		});
