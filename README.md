@@ -1,7 +1,9 @@
 # IBM Challenge 5 - Interactive Story Telling
 ## What is all this about?
 A simple vocal interating game for sight impaired people. Load a interactive story in pre-defined format and enjoying the fully automatic story telling.
+
 This is a part of IBM AI Challenge 2019 in the University of Liverpool.
+
 Text to Speech and Speech to Text services are based on IBM Watson AI platform.
 ## How to use?
 * Python 3.7.3. + `ibm_watson`, `flask` and `python_datauri` library.
@@ -22,8 +24,13 @@ Text to Speech and Speech to Text services are based on IBM Watson AI platform.
   * You may want to mask the file from your HTTP server.
 ## Who did this?
 A bunch of students from the University of Liverpool, participating IBM AI Challenge.
+
 We are **the Team Diesel Engine**.
+
 **Captain:** Miguel Li
+
 **Coding:** Cheng Bi (Speech to Text), Chaoyi Han (UI & Game Logic), Yuefeng Liang (Text to Speech
+
 **Story Design:** Miguel Li, Linwei Yang, Yukun Zhou
+
 **Team Management:** Miguel Li, Linwei Yang, Yukun Zhou
