@@ -2,11 +2,11 @@
 	"header": {
 		"title": {
 			"cat": "voiceover",
-			"text": "Test Story 100"
+			"text": "Default Story for Demonstration Purpose"
 		},
 		"author": {
 			"cat": "voiceover",
-			"text": "Bunch of stupid nerds"
+			"text": "The Diesel Engine"
 		},
 		"variables": [
 			{
@@ -25,7 +25,7 @@
 	"body": [
 		{
 			"cat": "voiceover",
-			"text": "do you want to stat the game? please select now, say yes to go ahead, say no to go away"
+			"text": "How do you want to make the first choice? Please select now: say yes for the first selection, say no for the second selection."
 		}, {
 			"cat": "selection",
 			"decisions": [
@@ -44,11 +44,11 @@
 			"reacts": [
 				{
 					"cat": "voiceover",
-					"text": "you said yes"
+					"text": "You said yes in selection number 1"
 				}, 
 				{
 					"cat": "voiceover",
-					"text": "you said no"
+					"text": "You said no in selection number 1"
 				}
 			]
 		}
@@ -57,29 +57,29 @@
 		{
 			"top": {
 				"cat": "voiceover",
-				"text": "very good"
+				"text": "You said yes, therefore the first variable is high."
 			},
 			"mid": {
 				"cat": "voiceover",
-				"text": "middle good"
+				"text": "Not available."
 			},
 			"low": {
 				"cat": "voiceover",
-				"text": "no good"
+				"text": "You said no, therefore the first variable is low."
 			}
 		},
 		{
 			"top": {
 				"cat": "voiceover",
-				"text": "very bad"
+				"text": "And second variable is high."
 			},
 			"mid": {
 				"cat": "voiceover",
-				"text": "middle bad"
+				"text": "Not available."
 			},
 			"low": {
 				"cat": "voiceover",
-				"text": "no bad"
+				"text": "And second variable is low."
 			}
 		}
 	]

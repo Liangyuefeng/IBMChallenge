@@ -13,9 +13,13 @@
 		<script src="lib/locale/easyui-lang-zh_CN.js"></script>
 		<script src="lib/recorder.mp3.min.js"></script>
 		<script>
-		var recorder = Recorder();
+		var recorder = Recorder({
+			bitRate: 192,
+			sampleRate: 44100
+		});
 		recorder.open(function() {
-			$("#recordInfo").html("Recording permission granted.");
+			$("#recordInfo").html("Recording permission is granted.");
+			$("#recordInfo").css("color", "#00AA00");
 		}, function(msg, isUserNotAllow) {
 			$.messager.alert("Initialising Failed", "Initialising failed. " + (isUserNotAllow ? "User permission denied. " : msg), "error", function() {
 				window.location.reload();
@@ -24,12 +28,7 @@
 		
 		var blobBuilder = new FileReader();
 		blobBuilder.onloadend = function() {
-			$.messager.progress({
-				title: "Loading",
-				msg: "Please wait...",
-				text: "Loading..."
-			});
-			$.post("dynamic/stt", {
+			$.post("dynamic.py/stt", {
 				blobB64: blobBuilder.result
 			}, function(data) {
 				$.messager.progress("close");
@@ -43,10 +42,11 @@
 			var decoded = JSON.parse(fileReader.result);
 			if(decoded.header.title.text != null) {
 				story = decoded;
-				$("#fileInfo").html("Story: " + story.header.title.text + " is loaded.");
+				$("#localStoryInfo").html(story.header.title.text + " is loaded.");
+				$("#localStoryInfo").css("color", "#00AA00");
 			} else {
 				$.messager.alert("Loading Failed", "Loading failed. Please choose a valid story file.", "error", function() {
-					$("#file").filebox("clear");
+					$("#localStory").filebox("clear");
 				});
 			}
 		}
@@ -125,7 +125,7 @@
 				msg: "Please wait...",
 				text: "Loading..."
 			});
-			$.post("dynamic/tts", {
+			$.post("dynamic.py/tts", {
 				text: text,
 				lang: $("#languageBox").combobox("getValue")
 			}, function(data) {
@@ -138,59 +138,113 @@
 		<link rel="stylesheet" href="lib/themes/icon.css" />
 		<link rel="stylesheet" href="lib/themes/mobile.css" />
 		<link rel="stylesheet" href="lib/themes/material-teal/easyui.css" />
-		<title>IBM Challenge 5</title>
+		<title>IBM Challenge 5 - Interactive Story Telling</title>
 	</head>
 	<body>
 		<audio style="display: none" id="mainPlayer"></audio>
-		<h1>IBM Challenge 5</h1>
-		<h3>By the Magnificent Six</h3>
-		<span style="font-weight: bold;">Load your story configuration:</span> <input id="file" style="width: 300px;" /> <span id="fileInfo" style="color: #00AA00"></span><br />
-		<br />
-		<span style="font-weight: bold;">Text to Speech Configuration:</span><br />
-		Language: <input id="languageBox" style="width: 800px;"/><br />
-		<br />
-		<span style="font-weight: bold;">Speech to Text Configuration:</span><br />
-		Recognition Model: <input id="modelBox" style="width: 800px;"/><br /><a id="sttSwitch" style="width: 200px;"></a> <span id="recordInfo" style="color: #00AA00"></span><br />
-		<br />
-		<a id="startSwitch" style="width: 200px;"></a> Press <span style="font-weight: bold;">Space</span> to end recording when you finished speaking.
+		<h1>IBM Challenge 5 - Interactive Story Telling</h1>
+		<p>Enjoying with a high quality sound adapter and microphone to ensure good experience.</p>
+		<h3 style="color: #0000AA">System Configuration</h3>
+		<p>
+			<span style="font-weight: bold;">Story Configuration:</span><br />
+			Load Locally: <input id="localStory" style="width: 600px;" /><br />
+			Load Predefined: <input id="remoteStory" style="width: 600px;" />
+		</p>
+		<p>
+			<span style="font-weight: bold;">Text to Speech Configuration:</span><br />
+			Language: <input id="languageBox" style="width: 600px;"/>
+		</p>
+		<p>
+			<span style="font-weight: bold;">Speech to Text Configuration:</span><br />
+			Recognition Model: <input id="modelBox" style="width: 600px;" />
+		</p>
+		<h3 style="color: #0000AA">System Status</h3>
+		<p>
+			Permission: <span id="recordInfo" style="color: #AA0000">Recording permission is not granted.</span><br />
+			Story: <span id="localStoryInfo" style="color: #AA0000">No story loaded yet.</span>
+		</p>
+		<h3 style="color: #0000AA">General Controls</h3>
+		<p>
+			Automated Recording Switch (controlled by <span style="font-weight: bold;">F</span> key) <a id="sttSwitch" style="width: 200px;"></a><br />
+			Master Switch (controlled by <span style="font-weight: bold;">S</span> key) <a id="startSwitch" style="width: 200px;"></a>
+		</p>
+		<h3 style="color: #0000AA">About</h3>
+		<p>
+			<span style="font-weight: bold">IBM Challenge 5 - Interactive Story Telling</span><br />
+			Powered by The Diesel Engine Dev Team 2019, all rights reserved.<br />
+			<span style="font-weight: bold">Captain:</span> Miguel Li<br />
+			<span style="font-weight: bold">Coding:</span> Cheng Bi (Speech to Text), Chaoyi Han (UI & Game Logic), Yuefeng Liang (Text to Speech)<br />
+			<span style="font-weight: bold">Story Design:</span> Miguel Li, Linwei Yang, Yukun Zhou<br />
+			<span style="font-weight: bold">Team Management:</span> Miguel Li, Linwei Yang, Yukun Zhou<br />
+		</p>
 		<script>
 		$("#languageBox").combobox({
 			iconCls: 'icon-man',
-			url: "dynamic/langlist",
+			url: "dynamic.py/langlist",
 			value: "en-GB_KateVoice",
 			editable: false
 		});
 		$("#modelBox").combobox({
 			iconCls: 'icon-tip',
-			url: "dynamic/modellist",
-			value: "en-GB_NarrowbandModel",
+			url: "dynamic.py/modellist",
+			value: "en-GB_BroadbandModel",
 			editable: false
 		});
-		$("#file").filebox({
+		$("#remoteStory").combobox({
+			iconCls: 'icon-reload',
+			url: "dynamic.py/storylist",
+			value: "<Select a story below>",
+			editable: false,
+			onSelect: function(record) {
+				$.messager.progress({
+					title: "Loading",
+					msg: "Please wait...",
+					text: "Loading..."
+				});
+				$.getJSON("stories/" + record.value, function(data) {
+					$.messager.progress("close");
+					if(data.header.title.text != null) {
+						story = data;
+						$("#localStoryInfo").html(story.header.title.text + " is loaded.");
+						$("#localStoryInfo").css("color", "#00AA00");
+					} else {
+						$.messager.alert("Loading Failed", "Loading failed. Please choose a valid story file.", "error", function() {
+							$("#remoteStory").combobox("setValue", "<Select a story below>");
+						});
+					}
+				});
+			}
+		});
+		$("#localStory").filebox({
 			buttonText: 'Choose File',
 			buttonAlign: 'right',
-			buttonIcon: 'icon-file',
+			buttonIcon: 'icon-save',
 			accept: 'application/json',
-			prompt: 'Click to select your file',
+			prompt: 'Choose a story file',
 			onChange: function(newValue, oldValue){
-				var file = $("#file").filebox("files");
+				var file = $("#localStory").filebox("files");
 				if(file.length == 1 && file[0].type == "application/json") {
 					fileReader.readAsText(file[0]);
 				} else {
 					$.messager.alert("Loading Failed", "Loading failed. Please choose a JSON file.", "error", function() {
-						$("#file").filebox("clear");
+						$("#localStory").filebox("clear");
 					});
 				}
 			}
 		});
 		$("#sttSwitch").switchbutton({
 			onText: 'Recording...',
-			offText: 'Idle',
+			offText: 'Not Recording',
 			disabled: true,
 			onChange: function(checked) {
 				if(checked) {
 					recorder.start();
 				} else {
+					$.messager.progress({
+						title: "Loading",
+						msg: "Please wait...",
+						text: "Loading..."
+					});
 					$("#sttSwitch").switchbutton("disable");
 					recorder.stop(function(blob, duration) {
 						blobBuilder.readAsDataURL(blob);
@@ -198,14 +252,15 @@
 						$.messager.alert("Stopping Failed", "Stopping failed. " + msg, "error");
 					});
 				}
-			}
+			},
+			handleText: "F"
 		});
 		$("#startSwitch").switchbutton({
 			onText: 'Running...',
 			offText: 'Press to Start',
 			onChange: function(checked) {
 				if(checked) {
-					if($("#recordInfo").html() == "") {
+					if($("#recordInfo").html() == "Recording permission is not granted.") {
 						$.messager.alert("Starting Failed", "Stating failed. Recording permission not granted.", "error", function() {
 							$("#startSwitch").switchbutton("uncheck");
 						});
@@ -219,6 +274,7 @@
 							story.header.variables[i].value = v.default;
 						});
 						process();
+						$("#sttSwitch").focus();
 					}
 				} else {
 					tick = -3;
@@ -226,13 +282,25 @@
 					$("#sttSwitch").switchbutton("uncheck");
 					$("#mainPlayer")[0].pause();
 				}
-			}
+			},
+			handleText: "S"
 		});
 		$(document).keypress(function(event) {
-			if(event.which == 32) {
-				if($("#sttSwitch").switchbutton("options").checked == true) {
-					$("#sttSwitch").switchbutton("uncheck");
-				}
+			switch(event.which) {
+				case 102:
+				case 70:
+					if($("#sttSwitch").switchbutton("options").checked == true) {
+						$("#sttSwitch").switchbutton("uncheck");
+					}
+					break;
+				case 115:
+				case 83:
+					if($("#startSwitch").switchbutton("options").checked == true) {
+						$("#startSwitch").switchbutton("uncheck");
+					} else {
+						$("#startSwitch").switchbutton("check");
+					}
+					break;
 			}
 		});
 		$("#mainPlayer").bind('ended', function(){

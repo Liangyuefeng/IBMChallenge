@@ -1,0 +1,4 @@
+{
+	"stt": "<insert your ibm watson speech to text key here>",
+	"tts": "<insert your ibm watson text to speech key here>"
+}
