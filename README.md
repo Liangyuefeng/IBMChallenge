@@ -29,7 +29,7 @@ We are **the Team Diesel Engine**.
 
 **Captain:** Miguel Li
 
-**Coding:** Cheng Bi (Speech to Text), Chaoyi Han (UI & Game Logic), Yuefeng Liang (Text to Speech
+**Coding:** Cheng Bi (Speech to Text), Chaoyi Han (UI & Game Logic), Yuefeng Liang (Text to Speech)
 
 **Story Design:** Miguel Li, Linwei Yang, Yukun Zhou
 
