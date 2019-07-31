@@ -34,6 +34,6 @@ We are **the Team Diesel Engine**.
 **Story Design:** Miguel Li, Linwei Yang, Yukun Zhou
 
 **Team Management:** Miguel Li, Linwei Yang, Yukun Zhou
-##Libraries Used
+## Libraries Used
 * [jQuery 3.4.2](https://jquery.com)
 * [jQuery EasyUI 1.8.1](https://jeasyui.com)
