@@ -9,9 +9,9 @@ Text to Speech and Speech to Text services are based on IBM Watson AI platform.
 * Python 3.7.3. + `ibm_watson`, `flask` and `python_datauri` library.
 * A browser supporting HTML5 audio recording and playing. Some working browser showed below.
   * Microsoft Edge
-  * Webkit family
+  * WebKit family
   * Firefox
-  * -[Internet Explorer 11]
+  * ~~Internet Explorer 11~~
 * A HTTP server. The code cannot be ran by itself from version 1.1.0. A HTTP server with WSGI is intended. Tons of tutorials online to help you do this.
   * IIS (tested and currently based on)
     * On IIS make sure you configured the number of instances correctly for better performance.
