@@ -8,8 +8,8 @@ This is a part of IBM AI Challenge 2019 in the University of Liverpool.
 
 Text to Speech and Speech to Text services are based on IBM Watson AI platform.
 ## How to use?
-* Python 3.7.3. + `ibm_watson`, `flask` and `python_datauri` library.
-* A browser supporting HTML5 audio recording and playing. Some working browser showed below.
+* Python 3.7.3 + `ibm_watson`, `flask` and `python_datauri` library.
+* A browser supporting HTML5 audio recording and playing. Some working browsers showed below.
   * Microsoft Edge
   * WebKit family
   * Firefox
