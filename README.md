@@ -2,6 +2,8 @@
 ## What is all this about?
 A simple vocal interating game for sight impaired people. Load a interactive story in pre-defined format and enjoying the fully automatic story telling.
 
+There can be player choices inside stories, making endings differ based on the choices made.
+
 This is a part of IBM AI Challenge 2019 in the University of Liverpool.
 
 Text to Speech and Speech to Text services are based on IBM Watson AI platform.
@@ -23,7 +25,7 @@ Text to Speech and Speech to Text services are based on IBM Watson AI platform.
   * Get an IBM account at [https://www.ibm.com/watson](https://www.ibm.com/watson)
   * You may want to mask the file from your HTTP server.
 ## Who did this?
-A bunch of students from the University of Liverpool, participating IBM AI Challenge.
+A bunch of students from the University of Liverpool, participating IBM AI Challenge 2019.
 
 We are **the Team Diesel Engine**.
 
@@ -35,5 +37,5 @@ We are **the Team Diesel Engine**.
 
 **Team Management:** Miguel Li, Linwei Yang, Yukun Zhou
 ## Libraries Used
-* [jQuery 3.4.2](https://jquery.com)
+* [jQuery 3.4.1](https://jquery.com)
 * [jQuery EasyUI 1.8.1](https://jeasyui.com)
