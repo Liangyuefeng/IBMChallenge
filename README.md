@@ -1,6 +1,7 @@
 # IBM Challenge 5 - Interactive Story Telling
+# Project Aurora
 ## What is all this about?
-A simple vocal interating game for sight impaired people. Load a interactive story in pre-defined format and enjoying the fully automatic story telling.
+A simple vocal interating game for sight impaired people. Load a interactive story in pre-defined format and enjoying the fully automatic storytelling.
 
 There can be player choices inside stories, making endings differ based on the choices made.
 
@@ -31,11 +32,11 @@ We are **the Team Diesel Engine**.
 
 **Captain:** Miguel Li
 
-**Coding:** Cheng Bi (Speech to Text), Chaoyi Han (UI & Game Logic), Yuefeng Liang (Text to Speech)
+**Coding:** Cheng Bi (Speech to Text), Chaoyi Han (UI & Game Logic), Yuefeng Liang (Text to Speech), Miguel Li (Test Story Design)
 
-**Story Design:** Miguel Li, Linwei Yang, Yukun Zhou
+**Business Model:** Linwei Yang
 
-**Team Management:** Miguel Li, Linwei Yang, Yukun Zhou
+**Team Management:** Miguel Li, Yukun Zhou
 ## Libraries Used
 * [jQuery 3.4.1](https://jquery.com)
 * [jQuery EasyUI 1.8.1](https://jeasyui.com)
