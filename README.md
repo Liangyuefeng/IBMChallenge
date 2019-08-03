@@ -1,5 +1,4 @@
-# IBM Challenge 5 - Interactive Story Telling
-# Project Aurora
+# Project Aurora - Interactive Story Telling
 ## What is all this about?
 A simple vocal interating game for sight impaired people. Load a interactive story in pre-defined format and enjoying the fully automatic storytelling.
 
